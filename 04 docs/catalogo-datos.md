@@ -1,0 +1,33 @@
+# Unity Catalog
+
+- Retail
+    - Bronze
+        - crm_miembros
+        - inv_stock_diario
+        - mstr_articulos
+        - mstr_proveedores
+        - mstr_tiendas
+        - post_devoluciones
+        - trans_ventas
+        - **pipeline_log**
+    - Silver
+        - crm_miembros
+        - inv_stock_diario
+        - mstr_articulos
+        - mstr_proveedores
+        - mstr_tiendas
+        - post_devoluciones
+        - trans_ventas
+        - **referential_errors**
+    - Gold
+        - agg_conversion_canal
+        - agg_top10_articulos_diario
+        - agg_ventas_diarias
+        - dim_fecha (*implementada en 01_setup/02_dim_fecha_table_creation.ipynb*)
+        - dim_clientes
+        - dim_productos
+        - dim_tiendas
+        - fact_devoluciones
+        - fact_inventario
+        - fact_rfm_clientes
+        - fact_ventas
