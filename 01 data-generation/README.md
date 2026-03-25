@@ -7,3 +7,7 @@ En el *docker-compose.yaml* verás implementados los containers que correran jun
 Para injestar los datos ejecuta el comando **docker-compose up** en tu terminal.
 
 Puedes consultar los datos desde tu terminal con **pgcli -h localhost -U root -d myretail**. 
+
+### Evidencia:
+
+<img alt="Captura de pantalla 2026-03-21 a la(s) 4 26 32 p m" src="https://github.com/user-attachments/assets/64428ecc-814f-46d4-80a4-ec7881f37d65" />
