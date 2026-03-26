@@ -14,6 +14,18 @@ Finalmente, ejecuta *postgres-to-s3.py*
 
 **NOTA: El resto del pipeline es orquestado dentro de Databricks usando Jobs & Pipelines.**
 
+## Decisión sobre Slowly Changing Dimensions (SCD)
+
+Este pipeline no implementa explícitamente estrategias SCD Tipo 2 o Tipo 3. En su lugar, adopta un enfoque diferenciado por capa alineado con el propósito de la arquitectura Medallion y el alcance del caso de estudio.
+
+En la capa **Bronze**, los datos se almacenan en modo *append-only* con metadatos de auditoría (`ingestion_timestamp`, `source_system`, `batch_id`). Esto preserva el histórico técnico completo del dato fuente.
+
+En la capa **Silver**, las tablas se recalculan completamente en cada ejecución mediante *overwrite*. Esta decisión garantiza consistencia ante cambios en reglas de limpieza, tipificación o validación, evitando la persistencia de errores derivados de ejecuciones anteriores.
+
+En la capa **Gold**, las dimensiones se mantienen mediante operaciones `MERGE` por clave primaria, lo que equivale funcionalmente a una estrategia **SCD Tipo 1** (sobrescritura del valor anterior sin conservación de versiones históricas). Esta aproximación es suficiente para los requerimientos analíticos del escenario, ya que no es necesario conservar el historial de cambios en los atributos de las dimensiones para responder las preguntas de negocio planteadas.
+
+Aunque en esta versión del pipeline no se implementó SCD Tipo 2, tablas como dim_clientes y dim_productos podrían beneficiarse de historización en una evolución futura del modelo. Por ejemplo, cambios en atributos como el canal preferido del cliente, su estado activo o el precio de lista de un producto pueden ser relevantes para análisis longitudinales de comportamiento o de margen. En ese caso, sería necesario agregar columnas de vigencia (fec_inicio, fec_fin, es_vigente) e incorporar lógica para cerrar versiones anteriores de los registros durante las cargas incrementales.
+
 ## Evidencia:
 - postgres-to-s3.py
 <img alt="Captura de pantalla 2026-03-23 a la(s) 10 02 00 a m" src="https://github.com/user-attachments/assets/2c98eba5-1f4d-4a51-81b0-797524354bb9" />
